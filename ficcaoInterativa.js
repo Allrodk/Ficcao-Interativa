@@ -1,8 +1,60 @@
 console.clear();
 
-console.log(
-  "O Victória é uma criança que adora brincar. Se sente tão feliz quando está brincando que perde a noção do perigo, esquece de comer e só para quando está com muito sono. Vamos ajudá-la manter seus status de forma equilibrada durante um dia."
-);
+const prompt = require("prompt-sync")();
+
+const apresentacao = [
+  "Victória é uma criança que adora brincar. Se sente tão feliz quando está brincando que perde a noção do perigo, esquece de comer e só para quando está com muito sono. Vamos ajudá-la manter seus status de forma equilibrada durante um dia.",
+  "Victória acabou de acordar e quer tomar um café da manhã. Vamos ajudá-la a escolher!",
+  "Depois de se alimentar, Victória quer brincar.",
+  "Agora ela não quer mais ficar parada, ela quer uma brincadeira que movimente o corpo.",
+  "Essa última brincadeira deixou a Vitória muito cansada.",
+  "Agora que ela descansou, está na hora de comer.",
+  "Agora com as energias carregadas, mais brincadeiras.",
+  "Agora o dia acabou. Hora de jantar e ir dormir.",
+];
+
+const perguntas = [
+  [],
+  {
+    pergunta: " - O que será que eu vou comer?",
+    cafe: ["Café com leite e bolacha", "Chocolate quente", "Suco com bolacha"],
+  },
+  {
+    pergunta: " - Do que será que eu vou brincar?",
+    brincadeira1: [
+      "Jogar no celular",
+      "Fazer vídeos engraçados",
+      "Assistir vídeos no Youtube",
+      "Desenhar",
+      "Jogar Minecraft",
+      "Jogar Roblox",
+    ],
+  },
+  {
+    pergunta: " - Do que será que eu vou brincar?",
+    brincadeira2: [
+      "Jogar vôlei com o irmão",
+      "Jogar futebol com o irmão",
+      "Andar de bicicleta",
+      "Pular corda",
+      "Pular Amarelinha",
+      "Andar de Patinete",
+    ],
+  },
+  {
+    pergunta:
+      " - Poxa! preciso descansar e bebebr alguma coisa. O que devo beber?",
+    descanso: ["Beber água", "Beber Refrigerante", "Beber suco"],
+  },
+  {
+    pergunta: " - O que devo comer?",
+    alimentacao: [
+      "Um salgadinho",
+      "Arroz, Feijão e batata ao molho",
+      "Sanduiche de queijo",
+    ],
+  },
+];
 
 let statusPersonagem = {
   saude: 100,
@@ -77,13 +129,71 @@ function cem() {
     }
   });
 }
-machucar();
 
-console.log(statusPersonagem);
-while (statusPersonagem.fome < 100) {
-  curar();
-  console.log(statusPersonagem);
-  zero();
-  cem();
+function mostrarStatus() {
+  console.log(`
+Saude: ${statusPersonagem.saude}
+Fome: ${statusPersonagem.fome}
+Felicidade: ${statusPersonagem.felicidade}
+Cansaco: ${statusPersonagem.cansaco}
+Sono: ${statusPersonagem.sono}
+  `);
 }
-console.log(statusPersonagem);
+
+// Início
+console.log(apresentacao[0]);
+
+console.log();
+prompt("Pressione ENTER para continuar.");
+console.clear();
+
+// Pergunta 1 - Café
+let numPergunta = 1;
+let cont = 0;
+let tarefa = 0;
+do {
+  mostrarStatus();
+  console.log(`${apresentacao[numPergunta]} Temos:\n`);
+
+  cont = 0;
+  while (cont < perguntas[numPergunta].cafe.length) {
+    console.log(`(${cont + 1}) ${perguntas[numPergunta].cafe[cont]}`);
+    cont++;
+  }
+
+  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
+} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
+
+// Pergunta 2 - Brincar
+numPergunta++;
+cont = 0;
+tarefa = 0;
+do {
+  mostrarStatus();
+  console.log(`${apresentacao[numPergunta]} Temos:\n`);
+
+  cont = 0;
+  while (cont < perguntas[numPergunta].brincadeira1.length) {
+    console.log(`(${cont + 1}) ${perguntas[numPergunta].brincadeira1[cont]}`);
+    cont++;
+  }
+
+  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
+} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
+
+// Pergunta 3 - Brincar
+numPergunta++;
+cont = 0;
+tarefa = 0;
+do {
+  mostrarStatus();
+  console.log(`${apresentacao[numPergunta]} Temos:\n`);
+
+  cont = 0;
+  while (cont < perguntas[numPergunta].brincadeira2.length) {
+    console.log(`(${cont + 1}) ${perguntas[numPergunta].brincadeira2[cont]}`);
+    cont++;
+  }
+
+  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
+} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
