@@ -8,20 +8,23 @@ const apresentacao = [
   "Depois de se alimentar, Victória quer brincar.",
   "Agora ela não quer mais ficar parada, ela quer uma brincadeira que movimente o corpo.",
   "Essa última brincadeira deixou a Vitória muito cansada.",
-  "Agora que ela descansou, está na hora de comer.",
+  "Victória está faminta.",
   "Agora com as energias carregadas, mais brincadeiras.",
   "Agora o dia acabou. Hora de jantar e ir dormir.",
 ];
 
 const perguntas = [
-  [],
   {
     pergunta: " - O que será que eu vou comer?",
-    cafe: ["Café com leite e bolacha", "Chocolate quente", "Suco com bolacha"],
+    respostas: [
+      "Café com leite e bolacha",
+      "Chocolate quente",
+      "Suco com bolacha",
+    ],
   },
   {
     pergunta: " - Do que será que eu vou brincar?",
-    brincadeira1: [
+    respostas: [
       "Jogar no celular",
       "Fazer vídeos engraçados",
       "Assistir vídeos no Youtube",
@@ -32,7 +35,7 @@ const perguntas = [
   },
   {
     pergunta: " - Do que será que eu vou brincar?",
-    brincadeira2: [
+    respostas: [
       "Jogar vôlei com o irmão",
       "Jogar futebol com o irmão",
       "Andar de bicicleta",
@@ -44,11 +47,11 @@ const perguntas = [
   {
     pergunta:
       " - Poxa! preciso descansar e bebebr alguma coisa. O que devo beber?",
-    descanso: ["Beber água", "Beber Refrigerante", "Beber suco"],
+    respostas: ["Beber água", "Beber Refrigerante", "Beber suco"],
   },
   {
     pergunta: " - O que devo comer?",
-    alimentacao: [
+    respostas: [
       "Um salgadinho",
       "Arroz, Feijão e batata ao molho",
       "Sanduiche de queijo",
@@ -66,29 +69,36 @@ let statusPersonagem = {
 
 function caminhar() {
   statusPersonagem.fome += 5;
-  statusPersonagem.felicidade -= 2;
+  statusPersonagem.felicidade -= 7;
   statusPersonagem.cansaco += 5;
-  statusPersonagem.sono += 2;
+  statusPersonagem.sono += 10;
 }
 
 function correr() {
-  statusPersonagem.fome += 8;
-  statusPersonagem.felicidade += 2;
-  statusPersonagem.cansaco += 8;
+  statusPersonagem.fome += 12;
+  statusPersonagem.felicidade += 10;
+  statusPersonagem.cansaco += 12;
   statusPersonagem.sono += 5;
 }
 
 function brincar() {
   statusPersonagem.fome += 5;
+  statusPersonagem.felicidade += 15;
+  statusPersonagem.cansaco += 10;
+  statusPersonagem.sono += 2;
+}
+
+function descansar() {
+  statusPersonagem.fome -= 15;
   statusPersonagem.felicidade += 5;
-  statusPersonagem.cansaco += 2;
+  statusPersonagem.cansaco -= 20;
   statusPersonagem.sono += 2;
 }
 
 function comer() {
   statusPersonagem.fome -= 25;
   statusPersonagem.felicidade += 5;
-  statusPersonagem.cansaco += 2;
+  statusPersonagem.cansaco -= 20;
   statusPersonagem.sono += 2;
 }
 
@@ -114,15 +124,12 @@ function curar() {
   statusPersonagem.sono += 2;
 }
 
-function zero() {
+function normalizar() {
   Object.keys(statusPersonagem).map(function (key, index) {
     if (statusPersonagem[key] < 0) {
       statusPersonagem[key] = 0;
     }
   });
-}
-
-function cem() {
   Object.keys(statusPersonagem).map(function (key, index) {
     if (statusPersonagem[key] > 100) {
       statusPersonagem[key] = 100;
@@ -131,13 +138,10 @@ function cem() {
 }
 
 function mostrarStatus() {
+  normalizar();
   console.log(`
-Saude: ${statusPersonagem.saude}
-Fome: ${statusPersonagem.fome}
-Felicidade: ${statusPersonagem.felicidade}
-Cansaco: ${statusPersonagem.cansaco}
-Sono: ${statusPersonagem.sono}
-  `);
+Saude:${statusPersonagem.saude} Fome:${statusPersonagem.fome} Felicidade:${statusPersonagem.felicidade} Cansaco:${statusPersonagem.cansaco} Sono:${statusPersonagem.sono}
+`);
 }
 
 // Início
@@ -147,53 +151,74 @@ console.log();
 prompt("Pressione ENTER para continuar.");
 console.clear();
 
+// Função Perguntar
+let numPergunta = 0;
+function perguntar(numPergunta) {
+  let cont = 0;
+  let tarefa = 0;
+  do {
+    mostrarStatus();
+    console.log(`${apresentacao[numPergunta + 1]} Temos:\n`);
+
+    cont = 0;
+    while (cont < perguntas[numPergunta].respostas.length) {
+      console.log(`(${cont + 1}) ${perguntas[numPergunta].respostas[cont]}`);
+      cont++;
+    }
+
+    tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
+  } while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
+}
+
+function verificaFome() {
+  if (statusPersonagem.fome >= 85) {
+    perguntar(4);
+    caminhar();
+    comer();
+  }
+}
+
+function verificaCansaco() {
+  if (statusPersonagem.cansaco >= 85) {
+    perguntar(3);
+    descansar();
+  }
+}
+
+function verificaSono() {
+  if (statusPersonagem.sono >= 85) {
+    console.log("Victória está com muito sono. Está na hora de ela dormir");
+    dormir();
+  }
+}
+
 // Pergunta 1 - Café
-let numPergunta = 1;
-let cont = 0;
-let tarefa = 0;
-do {
-  mostrarStatus();
-  console.log(`${apresentacao[numPergunta]} Temos:\n`);
+verificaFome();
+verificaCansaco();
+perguntar(numPergunta++);
+caminhar();
+comer();
 
-  cont = 0;
-  while (cont < perguntas[numPergunta].cafe.length) {
-    console.log(`(${cont + 1}) ${perguntas[numPergunta].cafe[cont]}`);
-    cont++;
+console.log(statusPersonagem.sono);
+
+while (true) {
+  if (statusPersonagem.sono <= 85) {
+    // Pergunta - Brincar
+    verificaFome();
+    verificaCansaco();
+    perguntar(numPergunta);
+    caminhar();
+    brincar();
+    if (numPergunta == 1) {
+      numPergunta = 2;
+    } else {
+      numPergunta = 1;
+    }
+  } else {
+    break;
   }
+}
 
-  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
-} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
-
-// Pergunta 2 - Brincar
-numPergunta++;
-cont = 0;
-tarefa = 0;
-do {
-  mostrarStatus();
-  console.log(`${apresentacao[numPergunta]} Temos:\n`);
-
-  cont = 0;
-  while (cont < perguntas[numPergunta].brincadeira1.length) {
-    console.log(`(${cont + 1}) ${perguntas[numPergunta].brincadeira1[cont]}`);
-    cont++;
-  }
-
-  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
-} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
-
-// Pergunta 3 - Brincar
-numPergunta++;
-cont = 0;
-tarefa = 0;
-do {
-  mostrarStatus();
-  console.log(`${apresentacao[numPergunta]} Temos:\n`);
-
-  cont = 0;
-  while (cont < perguntas[numPergunta].brincadeira2.length) {
-    console.log(`(${cont + 1}) ${perguntas[numPergunta].brincadeira2[cont]}`);
-    cont++;
-  }
-
-  tarefa = +prompt(`\n${perguntas[numPergunta].pergunta} `);
-} while (tarefa <= 0 || tarefa > cont || isNaN(tarefa));
+verificaFome();
+verificaCansaco();
+verificaSono();
