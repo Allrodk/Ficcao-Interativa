@@ -201,21 +201,17 @@ comer();
 
 console.log(statusPersonagem.sono);
 
-while (true) {
-  if (statusPersonagem.sono <= 85) {
-    // Pergunta - Brincar
-    verificaFome();
-    verificaCansaco();
-    perguntar(numPergunta);
-    caminhar();
-    brincar();
-    if (numPergunta == 1) {
-      numPergunta = 2;
-    } else {
-      numPergunta = 1;
-    }
+while (statusPersonagem.sono <= 85) {
+  // Pergunta - Brincar
+  verificaFome();
+  verificaCansaco();
+  perguntar(numPergunta);
+  caminhar();
+  brincar();
+  if (numPergunta == 1) {
+    numPergunta = 2;
   } else {
-    break;
+    numPergunta = 1;
   }
 }
 
